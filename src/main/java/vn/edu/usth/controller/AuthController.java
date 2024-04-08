@@ -17,6 +17,8 @@ import vn.edu.usth.repository.UserRepository;
 import vn.edu.usth.util.PBKDF2Encoder;
 import vn.edu.usth.util.TokenUtils;
 
+import java.nio.file.Paths;
+
 @Path("/auth")
 public class AuthController {
     @Inject
@@ -29,7 +31,8 @@ public class AuthController {
 
     @PermitAll
     @POST
-    @Path("/login") @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/login")
     public Response login(LoginRequest loginRequest) {
         User u = userRepository.findByUsername(loginRequest.username);
         if (u != null && u.getPassword().equals(passwordEncoder.encode(loginRequest.password))) {
@@ -45,7 +48,8 @@ public class AuthController {
 
     @PermitAll
     @POST
-    @Path("/register") @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/register")
     @Transactional
     public User register(RegisterRequest registerRequest) throws Exception {
 
@@ -60,6 +64,19 @@ public class AuthController {
         newUser.setEmail(registerRequest.email);
         newUser.setName(registerRequest.name);
         userRepository.persist(newUser);
+
+        java.nio.file.Path path1 = Paths.get("src/main/resources/Image/" + newUser.getId());
+        java.nio.file.Path path2 = Paths.get("src/main/resources/Image/" + newUser.getId() + "/Hyper_spectral");
+        java.nio.file.Path path3 = Paths.get("src/main/resources/Image/" + newUser.getId() + "/Multi_spectral");
+        java.nio.file.Path path4 = Paths.get("src/main/resources/Image/" + newUser.getId() + "/Output");
+        try {
+            java.nio.file.Files.createDirectories(path1);
+            java.nio.file.Files.createDirectories(path2);
+            java.nio.file.Files.createDirectories(path3);
+            java.nio.file.Files.createDirectories(path4);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return newUser;
 

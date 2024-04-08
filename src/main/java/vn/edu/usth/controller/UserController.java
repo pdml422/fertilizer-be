@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GET
-    @RolesAllowed({"USER"})
+    @RolesAllowed({"USER", "ADMIN"})
     @Path("/me")
     public User getCurrentUser(@Context SecurityContext securityContext) throws ResourceNotFoundException {
         String username = securityContext.getUserPrincipal().getName();
