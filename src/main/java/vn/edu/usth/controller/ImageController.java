@@ -10,8 +10,8 @@ import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import vn.edu.usth.service.file.FileUploadService;
-import vn.edu.usth.service.file.ImageService;
+import vn.edu.usth.service.image.FileUploadService;
+import vn.edu.usth.service.image.ImageService;
 
 @RequestScoped
 @Path("/image")
@@ -31,8 +31,8 @@ public class ImageController {
 
     @GET
     @RolesAllowed({"USER", "ADMIN"})
-    @Path("/hyper/{id}")
-    public Response getHyperFromUserId(@PathParam("id") int id) {
+    @Path("/{userId}")
+    public Response getImageFromUserId(@PathParam("userId") int id) {
         return Response.ok(imageService.getImageFromUserId(id)).build();
     }
 
@@ -40,7 +40,7 @@ public class ImageController {
     @RolesAllowed({"USER"})
     @Path("/hyper/{id}/header")
     public Response getHyperHeaderFromUserId(@PathParam("id") int id) {
-        return Response.ok(imageService.getHeaderFromUserId(id)).build();
+        return Response.ok(imageService.getHyperHeaderFromUserId(id)).build();
     }
 
     @POST
@@ -48,15 +48,24 @@ public class ImageController {
     @RolesAllowed({"USER", "ADMIN"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response fileUpload(@MultipartForm MultipartFormDataInput input, @HeaderParam("userId") int userId) {
-        return Response.ok().entity(fileUploadService.uploadFile(input, userId)).build();
+    public Response uploadHyper(@MultipartForm MultipartFormDataInput input, @HeaderParam("userId") int userId) {
+        return Response.ok().entity(fileUploadService.uploadHyper(input, userId)).build();
     }
 
     @DELETE
     @RolesAllowed({"USER", "ADMIN"})
-    @Path("/hyper/{id}")
+    @Path("/{id}")
     public Response deleteHyper(@PathParam("id") int imageId) {
         return imageService.deleteImage(imageId);
+    }
+
+    @POST
+    @Path("/multi")
+    @RolesAllowed({"USER", "ADMIN"})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response uploadMulti(@MultipartForm MultipartFormDataInput input, @HeaderParam("userId") int userId) {
+        return Response.ok().entity(fileUploadService.uploadMulti(input, userId)).build();
     }
 
 }

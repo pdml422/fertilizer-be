@@ -1,11 +1,11 @@
 #!/bin/sh
 # ----------------------------------------------------------------------------
 # Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
+# or more contributor license agreements.  See the NOTICE image
 # distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
+# regarding copyright ownership.  The ASF licenses this image
 # to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
+# "License"); you may not use this image except in compliance
 # with the License.  You may obtain a copy of the License at
 #
 #    http://www.apache.org/licenses/LICENSE-2.0
@@ -157,7 +157,7 @@ find_maven_basedir() {
   printf '%s' "$(cd "$basedir" || exit 1; pwd)"
 }
 
-# concatenates all lines of a file
+# concatenates all lines of a image
 concat_lines() {
   if [ -f "$1" ]; then
     # Remove \r in case we run on Windows within Git Bash
@@ -251,7 +251,7 @@ fi
 # End of extension
 ##########################################################################################
 
-# If specified, validate the SHA-256 sum of the Maven wrapper jar file
+# If specified, validate the SHA-256 sum of the Maven wrapper jar image
 wrapperSha256Sum=""
 while IFS="=" read -r key value; do
   case "$key" in (wrapperSha256Sum) wrapperSha256Sum=$value; break ;;

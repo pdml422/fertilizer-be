@@ -1,4 +1,4 @@
-package vn.edu.usth.service.file;
+package vn.edu.usth.service.image;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -30,7 +30,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public List<Image> getHeaderFromUserId(int userId) {
+    public List<Image> getHyperHeaderFromUserId(int userId) {
         return imageRepository.getHeaderFromUserId(userId);
     }
 
