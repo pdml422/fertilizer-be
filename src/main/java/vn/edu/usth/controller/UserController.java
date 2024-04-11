@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
@@ -25,12 +26,9 @@ import java.util.List;
 @Path("/user")
 @SecurityScheme(securitySchemeName = "Basic Auth", type = SecuritySchemeType.HTTP, scheme = "basic")
 public class UserController {
-    private final UserService userService;
-
     @Inject
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    UserService userService;
+
     @GET
     @RolesAllowed({"ADMIN"})
     @Path("/all")
@@ -56,12 +54,8 @@ public class UserController {
     @PUT
     @RolesAllowed({"ADMIN", "USER"})
     @Path("/{id}")
-    public User updateUser(@PathParam("id") int id, @Valid UserDto userDto) throws ResourceNotFoundException {
-        if (userService != null && userDto != null) {
-            return userService.updateUser(id, userDto.toUser());
-        } else {
-            throw new IllegalArgumentException("userService or create user is null");
-        }
+    public User updateUser(@PathParam("id") int id, @RequestBody UserDto userDto) throws ResourceNotFoundException {
+        return userService.updateUser(id, userDto.toUser());
     }
 
     @DELETE

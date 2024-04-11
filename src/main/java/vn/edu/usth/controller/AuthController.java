@@ -9,6 +9,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import vn.edu.usth.dto.auth.LoginRequest;
 import vn.edu.usth.dto.auth.LoginResponse;
 import vn.edu.usth.dto.auth.RegisterRequest;
@@ -33,7 +34,7 @@ public class AuthController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
-    public Response login(LoginRequest loginRequest) {
+    public Response login(@RequestBody LoginRequest loginRequest) {
         User u = userRepository.findByUsername(loginRequest.username);
         if (u != null && u.getPassword().equals(passwordEncoder.encode(loginRequest.password))) {
             try {
@@ -51,7 +52,7 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
     @Transactional
-    public User register(RegisterRequest registerRequest) throws Exception {
+    public User register(@RequestBody RegisterRequest registerRequest) throws Exception {
 
         if (userRepository.findByUsername(registerRequest.username) != null) {
             throw new Exception("Username already exists");

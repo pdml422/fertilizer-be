@@ -4,10 +4,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import vn.edu.usth.dto.image.RGBImageFromHyperRequest;
 import vn.edu.usth.model.Image;
 import vn.edu.usth.repository.ImageRepository;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.List;
 
 @ApplicationScoped
@@ -45,6 +48,28 @@ public class ImageService implements IImageService {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    public String getRGBImageFromHyper(RGBImageFromHyperRequest request, int userId) {
+        StringBuilder res = new StringBuilder();
+        try {
+            String imagePath = getImageFromId(request.id).getPath();
+            String pythonPath = "python src/main/resources/hyperToRGB.py "
+                    + request.id + " " + userId + " " + imagePath + " " + request.red + " " + request.green + " " + request.blue;
+            Process p = Runtime.getRuntime().exec(pythonPath);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                res.append(line);
+            }
+            reader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return res.toString();
     }
 
 }
