@@ -19,4 +19,8 @@ public class ImageRepository implements PanacheRepository<Image> {
     public List<Image> getHeaderFromUserId(int userId) {
         return find("userId = ?1 and type = ?2", userId, "hdr").list();
     }
+
+    public List<Image> getMultiImageFromUserId(int userId) {
+        return find("userId = ?1 and type = ?2", userId, "tif").list();
+    }
 }
