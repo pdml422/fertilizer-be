@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import vn.edu.usth.dto.image.ImageResolution;
 import vn.edu.usth.dto.image.RGBImageRequest;
 import vn.edu.usth.model.Image;
 import vn.edu.usth.repository.ImageRepository;
@@ -105,6 +106,32 @@ public class ImageService implements IImageService {
         }
 
         return Response.ok(res.toString()).build();
+    }
+
+    public ImageResolution getResolution(int id) {
+        String imagePath = getImageFromId(id).getPath();
+        StringBuilder res = new StringBuilder();
+        try {
+            String pythonPath = "python src/main/resources/resolution.py " + imagePath;
+            Process p = Runtime.getRuntime().exec(pythonPath);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                res.append(line);
+            }
+            reader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String[] resolution = res.toString().split(" ");
+        ImageResolution imageResolution = new ImageResolution();
+        imageResolution.setWidth(Integer.parseInt(resolution[0]));
+        imageResolution.setHeight(Integer.parseInt(resolution[1]));
+
+        return imageResolution;
     }
 
 }

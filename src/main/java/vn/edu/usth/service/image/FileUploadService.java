@@ -113,6 +113,36 @@ public class FileUploadService {
         return "Files Successfully Uploaded";
     }
 
+    @Transactional
+    public String uploadModel(MultipartFormDataInput input, int userId) {
+        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+        List<String> fileNames = new ArrayList<>();
+        List<InputPart> multi = uploadForm.get("h5");
+        String fileName = null;
+
+        for (InputPart inputPart : multi) {
+            try {
+                MultivaluedMap<String, String> header = inputPart.getHeaders();
+                fileName = getFileName(header);
+                fileNames.add(fileName);
+                InputStream inputStream = inputPart.getBody(InputStream.class, null);
+                writeFile(inputStream, fileName, userId, "Model");
+
+                String path = "src/main/resources/Image/" + userId + "/Model/" + fileName;
+                Image image = new Image();
+                image.setPath(path);
+                image.setUserId(userId);
+                image.setType("h5");
+                imageRepository.persist(image);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "Files Successfully Uploaded";
+    }
+
     private void writeFile(InputStream inputStream,String fileName, int userId, String type) {
         File customDir = new File(UPLOAD_DIR + userId + "/" + type);
         fileName = customDir.getAbsolutePath() + File.separator + fileName;

@@ -127,4 +127,11 @@ public class ImageController {
         return imageService.getRGBImageFromMulti(request, userId);
     }
 
+    @GET
+    @Path("/resolution/{id}")
+    @RolesAllowed({"USER"})
+    public Response getResolution(@PathParam("id") int id) {
+        return Response.ok(imageService.getResolution(id)).build();
+    }
+
 }
